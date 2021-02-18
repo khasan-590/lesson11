@@ -25,7 +25,7 @@ let start = document.getElementById('start'),
 		salaryAmount = document.querySelector('.salary-amount'),
 		getExpenseName = document.getElementsByClassName('expenses-title'),
 		expensesItems = document.querySelectorAll('.expenses-items'),
-		getTargetAmount = document.getElementsByClassName('target-amount'),
+		getTargetAmount = document.querySelector('.target-amount'),
 		getSum = document.querySelector('.deposit-amount'),
 		additionalExpenses = document.querySelector('.additional_expenses'),
 		getProcent = document.querySelector('.deposit-percent'),
@@ -58,9 +58,8 @@ let start = document.getElementById('start'),
 						});
 					appData.budget = +salaryAmount.value;
 					
-					
-					appData.getExpenses();
 					appData.getIncome();
+					appData.getExpenses();
 					appData.getExpensesMonth();
 					appData.getAddExpenses();
 					appData.getAddIncome();
@@ -74,11 +73,11 @@ let start = document.getElementById('start'),
 					expensesMonthValue.value = appData.expensesMonth;
 					additionalExpensesvalue.value = appData.addExpenses.join(', ');
 					additionalIncomevalue.value = appData.addIncome.join(', ');
-					targetMonthValue.value = Math.ceil(appData.getTargetMonth());
+					targetMonthValue.value = appData.getTargetMonth();
 					incomePeriodValue.value = appData.calcPeriod();
 					// 
 					
-					periodSelect.addEventListener('change', function () {
+					periodSelect.addEventListener('input', function () {
 						incomePeriodValue.value = appData.calcPeriod();
 					});
 				
@@ -151,6 +150,7 @@ let start = document.getElementById('start'),
 				getBudget: function () {
 					appData.budgetMonth = appData.budget + appData.incomeMonth - appData.expensesMonth;
 					appData.budgetDay = Math.floor(appData.budgetMonth / 30);
+					return;
 				},
 		
 				getTargetMonth: function (){
@@ -186,6 +186,7 @@ let start = document.getElementById('start'),
 			expensesPlus.addEventListener('click' , appData.addExpensesBlock);
 			incomePlus.addEventListener('click' , appData.addIncomeBlock);
 
+			
 			periodSelect.addEventListener('input', function () {
 				periodAmount.innerHTML = periodSelect.value;
 			});
