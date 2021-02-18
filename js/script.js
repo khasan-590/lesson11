@@ -30,10 +30,9 @@ let start = document.getElementById('start'),
 		additionalExpenses = document.querySelector('.additional_expenses'),
 		getProcent = document.querySelector('.deposit-percent'),
 		incomeItems = document.querySelectorAll('.income-items'),
-		periodSelect = document.querySelector('.period-select');
+		periodSelect = document.querySelector('.period-select'),
+		periodAmount = document.querySelector('.period-amount');
 
-			
-			// let probels = '';
 
 		let appData = {
 				income: {},
@@ -51,10 +50,14 @@ let start = document.getElementById('start'),
 				
 
 				start : function() {
-					// if(salaryAmount.value === '') {
-					// 	alert('Ошибка, поле "Месячный доход" должно быть заполнено !');
-					// 	return;
-					// }
+					salaryAmount.addEventListener('input' , function (event){
+						if(salaryAmount.value === '') {
+							start.removeAttribute('disabled');
+						} else {
+							start.setAttribute('disabled' , 'true');
+						}
+	
+					});
 					appData.budget = +salaryAmount.value;
 					
 					
@@ -74,7 +77,11 @@ let start = document.getElementById('start'),
 					additionalExpensesvalue.value = appData.addExpenses.join(', ');
 					additionalIncomevalue.value = appData.addIncome.join(', ');
 					targetMonthValue.value = Math.ceil(appData.getTargetMonth());
-					incomePeriodValue.value = appData.calcSaveMoney();
+					incomePeriodValue.value = appData.calcPeriod();
+					// 
+					periodSelect.addEventListener('input', function () {
+					incomePeriodValue.value = appData.calcPeriod();
+					});
 				},
 				addExpensesBlock: function(){
 					let cloneExpensesItem = expensesItems[0].cloneNode(true);
@@ -122,6 +129,7 @@ let start = document.getElementById('start'),
 						}
 					});
 				},
+
 				getAddIncome: function(){
 					 additionalIncomeItem.forEach(function(item) {
 						let itemValue = item.value.trim();
@@ -130,11 +138,7 @@ let start = document.getElementById('start'),
 						}
 					});
 				},
-				// 
-				radngePeriodSelect: function(event){
-					console.log(event.type);
-				},
-				// 
+
 				getExpensesMonth: function (){
 					for ( let key in appData.expenses) {
 						appData.expensesMonth += appData.expenses[key];
@@ -161,33 +165,46 @@ let start = document.getElementById('start'),
 					}
 				},
 				
-				getInfoDeposit: function () {
-					if(appData.deposit){
-						do{
-							appData.precentDeposit = +prompt('Какой годовой процент?' , "10");
-							 } while (!isNumbers(appData.precentDeposit));//пока пользователь не введёт число
-							 do{
-								appData.moneyDeposit = +prompt('Какая сумма заложена?' , 10000);
-								 } while (!isNumbers(appData.moneyDeposit));//пока пользователь не введёт число
-					}
-				},
-				calcSaveMoney: function () {
+				// getInfoDeposit: function () {
+				// 	if(appData.deposit){
+				// 		do{
+				// 			appData.precentDeposit = +prompt('Какой годовой процент?' , "10");
+				// 			 } while (!isNumbers(appData.precentDeposit));//пока пользователь не введёт число
+				// 			 do{
+				// 				appData.moneyDeposit = +prompt('Какая сумма заложена?' , 10000);
+				// 				 } while (!isNumbers(appData.moneyDeposit));//пока пользователь не введёт число
+				// 	}
+				// },
+				
+				calcPeriod: function (e) {
+					// document.querySelector('.period-select').addEventListener('input' , appData.calcSaveMoney);
+					periodSelect.addEventListener('input', function () {
+						periodAmount.innerHTML = periodSelect.value;
+					});
 					return  appData.budgetMonth * periodSelect.value;
-				}
-		
+				},
+				// 
+				
+				// eventStart: function (event) { 
+				// 	if(salaryAmount.value === '') {
+				// 		start.removeEventListener('click', appData.eventStart);
+				// 		return;
+				// 	}
+				//  }
 			};
-			
+			start.setAttribute('disabled' , 'true');
 			start.addEventListener('click', appData.start);
-			
+			// start.addEventListener('click', appData.eventStart);
+
 			expensesPlus.addEventListener('click' , appData.addExpensesBlock);
 			incomePlus.addEventListener('click' , appData.addIncomeBlock);
 
-			periodSelect.addEventListener('input', appData.radngePeriodSelect);
+			
 
-
+			
 
 			// appData.getInfoDeposit();
-			// appData.calcSaveMoney();
+			// appData.calcPeriod();
 						
 			// for (let keys in appData) {
 			// 	console.log("Наша программа    включает в себя данные." + keys + " = " + appData[keys] + []);
