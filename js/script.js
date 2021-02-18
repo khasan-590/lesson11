@@ -50,14 +50,12 @@ let start = document.getElementById('start'),
 				
 
 				start : function() {
-					salaryAmount.addEventListener('input' , function (event){
-						if(salaryAmount.value === '') {
-							start.removeAttribute('disabled');
-						} else {
-							start.setAttribute('disabled' , 'true');
-						}
-	
-					});
+					start.addEventListener('click', function (event) {
+						  if (salaryAmount.value === '') {
+						    event.preventDefault();
+						  }
+						  appData.start();
+						});
 					appData.budget = +salaryAmount.value;
 					
 					
@@ -79,9 +77,11 @@ let start = document.getElementById('start'),
 					targetMonthValue.value = Math.ceil(appData.getTargetMonth());
 					incomePeriodValue.value = appData.calcPeriod();
 					// 
-					periodSelect.addEventListener('input', function () {
-					incomePeriodValue.value = appData.calcPeriod();
+					
+					periodSelect.addEventListener('change', function () {
+						incomePeriodValue.value = appData.calcPeriod();
 					});
+				
 				},
 				addExpensesBlock: function(){
 					let cloneExpensesItem = expensesItems[0].cloneNode(true);
@@ -96,7 +96,7 @@ let start = document.getElementById('start'),
 						let itemExpenses = item.querySelector('.expenses-title').value;
 						let cashExpenses = item.querySelector('.expenses-amount').value;
 						if(itemExpenses !== '' && cashExpenses !== '') {
-							appData.expenses[itemExpenses] = cashExpenses;
+							appData.expenses[itemExpenses] = +cashExpenses;
 						}
 					});
 				},
@@ -118,6 +118,10 @@ let start = document.getElementById('start'),
 							appData.income[itemIncome] = cashIncome;
 						}
 					});
+					// 
+					for (let key in appData.income) {
+						appData.incomeMonth += +appData.income[key];
+					}
 					// 
 				},
 				getAddExpenses: function(){
@@ -150,7 +154,7 @@ let start = document.getElementById('start'),
 				},
 		
 				getTargetMonth: function (){
-					return getTargetAmount.value / appData.budgetMonth;
+					return Math.ceil(getTargetAmount.value / appData.budgetMonth);
 				},
 			
 				 getStatusIncome: function () {
@@ -164,45 +168,29 @@ let start = document.getElementById('start'),
 						return('Что то пошло не так');
 					}
 				},
-				
-				// getInfoDeposit: function () {
-				// 	if(appData.deposit){
-				// 		do{
-				// 			appData.precentDeposit = +prompt('Какой годовой процент?' , "10");
-				// 			 } while (!isNumbers(appData.precentDeposit));//пока пользователь не введёт число
-				// 			 do{
-				// 				appData.moneyDeposit = +prompt('Какая сумма заложена?' , 10000);
-				// 				 } while (!isNumbers(appData.moneyDeposit));//пока пользователь не введёт число
-				// 	}
-				// },
-				
-				calcPeriod: function (e) {
-					// document.querySelector('.period-select').addEventListener('input' , appData.calcSaveMoney);
-					periodSelect.addEventListener('input', function () {
-						periodAmount.innerHTML = periodSelect.value;
-					});
+				getInfoDeposit: function () {
+					if(appData.deposit){
+						do{
+							appData.precentDeposit = +prompt('Какой годовой процент?' , "10");
+							 } while (!isNumbers(appData.precentDeposit));//пока пользователь не введёт число
+							 do{
+								appData.moneyDeposit = +prompt('Какая сумма заложена?' , 10000);
+								 } while (!isNumbers(appData.moneyDeposit));//пока пользователь не введёт число
+					}
+				},
+				calcPeriod: function () {
 					return  appData.budgetMonth * periodSelect.value;
 				},
-				// 
-				
-				// eventStart: function (event) { 
-				// 	if(salaryAmount.value === '') {
-				// 		start.removeEventListener('click', appData.eventStart);
-				// 		return;
-				// 	}
-				//  }
 			};
-			start.setAttribute('disabled' , 'true');
 			start.addEventListener('click', appData.start);
-			// start.addEventListener('click', appData.eventStart);
-
 			expensesPlus.addEventListener('click' , appData.addExpensesBlock);
 			incomePlus.addEventListener('click' , appData.addIncomeBlock);
 
+			periodSelect.addEventListener('input', function () {
+				periodAmount.innerHTML = periodSelect.value;
+			});
 			
-
-			
-
+	// 				});
 			// appData.getInfoDeposit();
 			// appData.calcPeriod();
 						
@@ -210,4 +198,3 @@ let start = document.getElementById('start'),
 			// 	console.log("Наша программа    включает в себя данные." + keys + " = " + appData[keys] + []);
 			// }
 			
-		
